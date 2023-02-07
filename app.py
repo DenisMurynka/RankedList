@@ -2,6 +2,7 @@ from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from sqlalchemy import  asc
+from sqlalchemy.sql.expression import func
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
@@ -34,7 +35,9 @@ def about():
 
 @app.route('/posts')
 def posts():
-    articles = Article.query.order_by(asc(Article.rank)).all()
+    articles = Article.query.order_by(
+                                        func.length(Article.rank)
+                                    ,asc(Article.rank)).all()
     #articles = Article.query.order_by(desc(Article.rank.asc())).all()
     return render_template("posts.html", articles=articles)
 
