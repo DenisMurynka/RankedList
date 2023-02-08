@@ -17,10 +17,19 @@ class Article(db.Model):
    
     text = db.Column(db.Text, nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
-
+    list_id = db.Column(db.Integer,nullable=False)
     def __repr__(self):
         return '<Article %r>' % self.id
 
+
+class List(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)   
+    text = db.Column(db.Text, nullable=False)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return '<List %r>' % self.id
 
 @app.route('/')
 @app.route('/home')
@@ -33,20 +42,35 @@ def about():
     return render_template("about.html")
 
 
+# @app.route('/posts')
+# def posts():
+#     articles = Article.query.order_by(func.length(Article.rank),
+#                                       asc(Article.rank)
+#                                       ).all()
+   
+#     return render_template("posts.html", articles=articles)
+
 @app.route('/posts')
 def posts():
-    articles = Article.query.order_by(
-                                        func.length(Article.rank)
-                                    ,asc(Article.rank)).all()
-    #articles = Article.query.order_by(desc(Article.rank.asc())).all()
-    return render_template("posts.html", articles=articles)
+    articles = List.query.all()
+   
+    return render_template("posts copy.html", articles=articles)
 
+
+
+
+# @app.route('/posts/<int:id>')
+# def post_detail(id):
+#     article = Article.query.get(id)
+#     return render_template("post_detail.html", article=article)
 
 @app.route('/posts/<int:id>')
 def post_detail(id):
-    article = Article.query.get(id)
-    return render_template("post_detail.html", article=article)
-
+    articles = Article.query.filter(Article.list_id == id).order_by(func.length(Article.rank),
+                                      asc(Article.rank)
+                                      ).all()
+   
+    return render_template("posts.html", articles=articles)
 
 @app.route('/posts/<int:id>/del')
 def post_delete(id):
