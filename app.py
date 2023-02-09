@@ -57,8 +57,6 @@ def posts():
     return render_template("posts copy.html", articles=articles)
 
 
-
-
 # @app.route('/posts/<int:id>')
 # def post_detail(id):
 #     article = Article.query.get(id)
@@ -105,11 +103,10 @@ def create_update(id):
 @app.route('/create-article', methods=['POST', 'GET'])
 def create_article():
     if request.method == 'POST':
-        title = request.form['title']
-        rank = request.form['rank']
+        name = request.form['title']
         text = request.form['text']
 
-        article = Article(title=title, rank=rank, text=text)
+        article = List(name=name,text=text)
 
         try:
             db.session.add(article)
@@ -120,6 +117,24 @@ def create_article():
     else:
         return render_template("create_article.html")
 
+#create a song record
+@app.route('/add-song/<int:id>', methods=['POST', 'GET'])
+def create_song(id):
+    if request.method == 'POST':
+        title = request.form['title']
+        rank = request.form['rank']
+        text = request.form['text']
+
+        article = Article(title=title, rank=rank, text=text, list_id = id)
+
+        try:
+            db.session.add(article)
+            db.session.commit()
+            return redirect('/posts')
+        except:
+            return "An error occurred while adding the article"
+    else:
+        return render_template("create_article copy.html")
 
 if __name__ == '__main__':
     app.run(debug=True)

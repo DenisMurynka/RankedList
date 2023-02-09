@@ -16,7 +16,7 @@ All articles on the site
 			<p>{{ el.text }}</p>
 			<p><b>Date: {{ el.date.date() }}</b></p>
 			<a href='/posts/{{ el.id }}' class='btn btn-warning'>List of songs</a>
-			<a class="btn btn-warning" href="/create-article"> Add a song</a>
+			<a class="btn btn-warning" href="/add-song/{{ el.id }}"> Add a song</a>
 		</div>
 		{% endfor %}
 	{% else %}
